@@ -1,6 +1,3 @@
-</body>
-</html>
-
 <!DOCTYPE html>
 <html>
 <body>
@@ -11,62 +8,83 @@
 
 	<script>
 
+		//some globals
 		var context, image, c;
 
+		//Fires at the end of the document loading process
 		window.onload = function() {
 
+			//get canvas DOM element
 			c = document.getElementById("canvas");
+
+			//get context, 2d canvas
 			context = c.getContext("2d");
+
+			//set image to "pixel"
 			image = document.getElementById("pixel");
-			context.drawImage(image, 10, 10);
 
-			drawLine(400, 400, 100, 100)
-
+			//this is it! Change it here
+			drawLine(50, 200, 100, 100);
 		}
 
 		function drawLine(x1, y1, x2, y2) {
 
-			var x12 = absDistance(x1, x2);
-			var y12 = absDistance(y1,y2);
+			var aux;
+			var nextX, nextY, iMax;
 
-			//if aux = 0 -> X is bigger
-			//else aux = 1 -> Y is bigger
-			var aux = 0, nextX, nextY, iMax;
-			var y_proportional = 1;
+			//sets proportional to 1
 			var x_proportional = 1;
+			var y_proportional = 1;
 
+			//find absolute distance between the 2 points
+			var x12 = absDistance(x1, x2);
+			var y12 = absDistance(y1, y2);
+
+			//find x12 and y12 direction
+			var dirX = direction(x1, x2);
+			var dirY = direction(y1, y2);
+			
+			//finds the best resolution possible
+			//set aux to 0 if x12 is bigger
+			//set aux to 1 if y12 is bigger
 			if (x12 > y12) {
 				y_proportional = y12 / x12;
-				console.log ("y_proportional: " + y_proportional);
+				aux = 0;
 			} else {
 				x_proportional = x12 / y12;
 				aux = 1;
 			}
 
-			iMax = aux == 1 ? y12 : x12; 
+			//stops at the maximum value
+			iMax = aux == 1 ? y12 : x12;
 
+			//init next pixel to be drawn with initial values
+			nextX = x1;
+			nextY = y1;
+
+			//draw the line
 			for ( i = 0 ; i < iMax ; i++) {
-				nextX = i * x_proportional;
-				nextY = i * y_proportional;
-
+				nextX = nextX + x_proportional * dirX;
+				nextY = nextY + y_proportional * dirY;
 				drawPixel(nextX , nextY);
 			}
 		}
 
+		//get absolute distance between 2 points on the same axis
 		function absDistance (a, b) {
 			return Math.abs(b - a);
 		}
 
+		//get direction (1, -1)
+		function direction(a, b) {
+			return ((b - a) / absDistance(a, b));
+		}
+
+		//draw image "pixel" on point(x,y)
 		function drawPixel(x,y) {
-
-			console.log(x);
-			console.log(y);
-			
 			context.drawImage(image,Math.floor(x),Math.floor(y));
-
-        	//context.fillStyle = "#F00";
-        	//context.fillRect(x, y, 1, 1);
         }
+
     </script>
 
 </body>

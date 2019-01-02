@@ -1,0 +1,73 @@
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<body>
+
+	<img id="pixel" width="2" height="2" src="pixel.png" style= "display: none;"">
+
+	<canvas id="canvas" width="400" height="400" style="border:1px solid #d3d3d3;">	</canvas>
+
+	<script>
+
+		var context, image, c;
+
+		window.onload = function() {
+
+			c = document.getElementById("canvas");
+			context = c.getContext("2d");
+			image = document.getElementById("pixel");
+			context.drawImage(image, 10, 10);
+
+			drawLine(400, 400, 100, 100)
+
+		}
+
+		function drawLine(x1, y1, x2, y2) {
+
+			var x12 = absDistance(x1, x2);
+			var y12 = absDistance(y1,y2);
+
+			//if aux = 0 -> X is bigger
+			//else aux = 1 -> Y is bigger
+			var aux = 0, nextX, nextY, iMax;
+			var y_proportional = 1;
+			var x_proportional = 1;
+
+			if (x12 > y12) {
+				y_proportional = y12 / x12;
+				console.log ("y_proportional: " + y_proportional);
+			} else {
+				x_proportional = x12 / y12;
+				aux = 1;
+			}
+
+			iMax = aux == 1 ? y12 : x12; 
+
+			for ( i = 0 ; i < iMax ; i++) {
+				nextX = i * x_proportional;
+				nextY = i * y_proportional;
+
+				drawPixel(nextX , nextY);
+			}
+		}
+
+		function absDistance (a, b) {
+			return Math.abs(b - a);
+		}
+
+		function drawPixel(x,y) {
+
+			console.log(x);
+			console.log(y);
+			
+			context.drawImage(image,Math.floor(x),Math.floor(y));
+
+        	//context.fillStyle = "#F00";
+        	//context.fillRect(x, y, 1, 1);
+        }
+    </script>
+
+</body>
+</html>
